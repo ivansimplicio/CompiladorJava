@@ -1,0 +1,202 @@
+/*
+	Analisador léxico e Analisador sintático.
+	Compilador para a linguagem de programação Java (escopo reduzido).
+*/
+
+PARSER_BEGIN(SyntaxChecker)
+
+package compiler;
+
+public class SyntaxChecker {
+
+	public static void main(String[] args) {
+		try {
+			String programa = Arquivo.Read("src/programa.txt");
+			new SyntaxChecker(new java.io.StringReader(programa)).INICIO();
+			System.out.println("\n\nA sintaxe está correta!");
+		}catch(Throwable e) {
+			System.out.println("\n\nErro na sintaxe: "+e.getMessage());
+		}
+	}
+}
+
+PARSER_END(SyntaxChecker)
+
+// Expressões a serem ignoradas
+
+SKIP:
+{	" " | "\r" | "\t" | "\n" |
+	"//" : comentarioSimples |
+	"/*" : comentarioLongo
+}
+
+<comentarioSimples> SKIP:
+{
+	"\n" : DEFAULT
+	| < ~[]> 
+}
+
+<comentarioLongo> SKIP:
+{
+	"*/": DEFAULT
+	| < ~[]> 
+}
+
+// Palavras reservadas
+TOKEN:
+{		<NULL: "null"> 				 {System.out.println("Palavra Reservada: " +image);}
+	|	<IMPORT: "import"> 			 {System.out.println("Palavra Reservada: " +image);}
+	|	<PACKAGE: "package">		 {System.out.println("Palavra Reservada: " +image);}
+	|	<CLASS: "class">			 {System.out.println("Palavra Reservada: " +image);}
+	|	<RETURN: "return">			 {System.out.println("Palavra Reservada: " +image);}
+	|	<PRINT: "System.out.println">{System.out.println("Palavra Reservada: " +image);}
+	|	<IF: "if">					 {System.out.println("Palavra Reservada: " +image);}
+	|	<ELSE: "else"> 				 {System.out.println("Palavra Reservada: " +image);}
+	|	<WHILE: "while">			 {System.out.println("Palavra Reservada: " +image);}
+	|	<TRUE: "true">				 {System.out.println("Palavra Reservada: " +image);}
+	|   <FALSE: "false">			 {System.out.println("Palavra Reservada: " +image);}
+}
+
+// Palavras reservadas - modificadores
+TOKEN:
+{
+		<STATIC: "static">			 {System.out.println("Modificador: " +image);}
+	|	<FINAL: "final">			 {System.out.println("Modificador: " +image);}
+	|	<PRIVATE: "private">		 {System.out.println("Modificador: " +image);}
+	|	<PROTECTED: "protected">	 {System.out.println("Modificador: " +image);}
+	| 	<PUBLIC: "public">			 {System.out.println("Modificador: " +image);}
+}
+
+// Palavras reservadas - tipos de dados
+TOKEN:
+{
+		<INT: "int">				 {System.out.println("Tipo de Dados: " +image);}
+	|	<FLOAT: "float">			 {System.out.println("Tipo de Dados: " +image);}
+	|	<STRING: "String">			 {System.out.println("Tipo de Dados: " +image);}
+	|	<CHAR: "char">				 {System.out.println("Tipo de Dados: " +image);}
+	|	<BOOLEAN: "boolean">		 {System.out.println("Tipo de Dados: " +image);}
+	|	<VOID: "void">				 {System.out.println("Tipo de Dados: " +image);}
+}
+
+// Separadores
+TOKEN:
+{
+		<AC: "{">					 {System.out.println("Separador: " +image);}
+	|	<FC: "}">					 {System.out.println("Separador: " +image);}
+	|	<AP: "(">					 {System.out.println("Separador: " +image);}
+	|	<FP: ")">					 {System.out.println("Separador: " +image);}
+	|	<AB: "[">					 {System.out.println("Separador: " +image);}
+	|	<FB: "]">					 {System.out.println("Separador: " +image);}
+	|	<VIRGULA: ",">				 {System.out.println("Separador: " +image);}
+	|	<PONTO: "."> 				 {System.out.println("Separador: " +image);}
+	|	<PONTO_VIRGULA: ";">		 {System.out.println("Separador: " +image);}
+	|	<PONTO_ASTERISCO: ".*">		 {System.out.println("Separador: " +image);}
+}
+
+
+// Operadores - Aritméticos
+TOKEN:
+{
+		<SOMA: "+">					 {System.out.println("Operador Aritmético: " +image);}
+	|	<SUBTRACAO: "-">			 {System.out.println("Operador Aritmético: " +image);}
+	|	<MUTIPLICACAO: "*">			 {System.out.println("Operador Aritmético: " +image);}
+	|	<DIVISAO: "/">				 {System.out.println("Operador Aritmético: " +image);}
+	|	<MODULO: "%">				 {System.out.println("Operador Aritmético: " +image);}
+	|	<SOMA_PLUS: "+=">		 	 {System.out.println("Operador Aritmético: " +image);}
+	|	<SUBTRACAO_PLUS: "-=">		 {System.out.println("Operador Aritmético: " +image);}
+	|	<MULTIPLICACAO_PLUS: "*=">	 {System.out.println("Operador Aritmético: " +image);}
+	|	<DIVISAO_PLUS: "/=">		 {System.out.println("Operador Aritmético: " +image);}
+	| 	<MODULO_PLUS: "%=">			 {System.out.println("Operador Aritmético: " +image);}
+}
+
+// Operadores - Outros
+TOKEN:
+{
+		<ATRIBUICAO: "=">			 {System.out.println("Operador de Atribuição: " +image);}
+	|	<INCREMENTO: "++">			 {System.out.println("Operador de Incremento: " +image);}
+	|	<DECREMENTO: "--">			 {System.out.println("Operador de Decremento: " +image);}
+	|	<IGUALDADE: "==">			 {System.out.println("Operador de Igualdade: " +image);}
+	|	<DIFERENCA: "!=">			 {System.out.println("Operador de Diferença: " +image);}
+}
+
+// Operadores - Relacionais
+TOKEN:
+{
+		<MENOR: "<">				 {System.out.println("Operador Relacional: " +image);}
+	|	<MAIOR: ">">				 {System.out.println("Operador Relacional: " +image);}
+	|	<MENOR_IGUAL: "<=">			 {System.out.println("Operador Relacional: " +image);}
+	|	<MAIOR_IGUAL: ">=">			 {System.out.println("Operador Relacional: " +image);}
+}
+
+// Operadores - Lógicos
+TOKEN:
+{
+		<AND: "&&">					 {System.out.println("Operador Lógico: " +image);}
+	|	<OR: "||">					 {System.out.println("Operador Lógico: " +image);}
+	|	<NEGACAO: "!"> 				 {System.out.println("Operador Lógico: " +image);}
+}
+
+// Identificador
+TOKEN:
+{
+		<IDENTIFICADOR: <LETRA> (<LETRA> | <DIGITO> | "_" | "$")* >		{System.out.println("Identificador: " +image);}
+	|	<#LETRA: (["a"-"z", "A"-"Z"])>
+	| 	<#DIGITO: ["0"-"9"]>
+}
+
+TOKEN :
+{
+      < INTEGER_LITERAL: <DECIMAL_LITERAL> (["l","L"])? >		{ System.out.println("Literal Int: " + image); }
+    | < #DECIMAL_LITERAL: ["0"-"9"] (["0"-"9"])* >
+    
+    | < FLOATING_POINT_LITERAL: (["0"-"9"])+ "." (["0"-"9"])* (<EXPONENT>)? (["f","F","d","D"])?
+    	| "." (["0"-"9"])+ (<EXPONENT>)? (["f","F","d","D"])?
+    	| (["0"-"9"])+ <EXPONENT> (["f","F","d","D"])?
+    	| (["0"-"9"])+ (<EXPONENT>)? ["f","F","d","D"]>			{ System.out.println("Literal Ponto Flutuante: " + image); }
+    | < #EXPONENT: ["e","E"] (["+","-"])? (["0"-"9"])+ >
+    
+    | < CHARACTER_LITERAL: "'"(   (~["'","\\","\n","\r"])
+        | ("\\" ( ["n","t","b","r","f","\\","'","\""]
+        | ["0"-"7"] ( ["0"-"7"] )?
+        | ["0"-"3"] ["0"-"7"] ["0"-"7"] ))) "'" >				{ System.out.println("Literal Char: " + image); }
+        
+    | < STRING_LITERAL:
+      "\""(   (~["\"","\\","\n","\r"])
+    	| ("\\"( ["n","t","b","r","f","\\","'","\""]
+       	| ["0"-"7"] ( ["0"-"7"] )?
+    	| ["0"-"3"] ["0"-"7"] ["0"-"7"] )))*"\""> 				{ System.out.println("Literal String: " + image); }
+}
+
+/* *********************************************** GRAMÁTICA DA LINGUAGEM JAVA *********************************************** */
+
+void INICIO():{}{Programa()}
+void Programa():{}{[PacoteDeclaracao()](ImportDeclaracao())* ClasseDeclaracao()}
+void PacoteDeclaracao():{}{"package" <IDENTIFICADOR> (DeclaracaoEstendida())* ";"}
+void ImportDeclaracao():{}{"import" <IDENTIFICADOR> (DeclaracaoEstendida())* [<PONTO_ASTERISCO>]";"}
+void DeclaracaoEstendida():{} {"." <IDENTIFICADOR> }
+void ClasseDeclaracao():{}{ Modificador()[<FINAL>] <CLASS> <IDENTIFICADOR> "{" CorpoClasse() "}"}
+void CorpoClasse():{}{ (([Modificador()] ([<STATIC>][<FINAL>] TipoDeDados() <IDENTIFICADOR> (VariavelDeclaracao() | MetodoDeclaracao())| ConstrutorDeclaracao())) | Main())* }
+void VariavelDeclaracao():{}{ InicializaVariavel() ("," <IDENTIFICADOR> InicializaVariavel())* ";"}
+void InicializaVariavel():{} {["=" OpcoesInicializacao()]}
+void MetodoDeclaracao():{}{"(" [ListaDeParametros()] ")" BlocoDeDeclaracoes() }
+void Main():{}{"public static void main" "(" <STRING> "[" "]" <IDENTIFICADOR> ")" BlocoDeDeclaracoes()}
+void ConstrutorDeclaracao():{}{<IDENTIFICADOR> "(" [ListaDeParametros()] ")" BlocoDeDeclaracoes() }
+void ListaDeParametros():{}{ Parametro() ("," Parametro())* }
+void Parametro():{}{ TipoDeDados() <IDENTIFICADOR> }
+void BlocoDeDeclaracoes():{}{ "{" (CorpoDaDeclaracao())* "}"}
+void CorpoDaDeclaracao():{}{TipoDeDados() <IDENTIFICADOR> VariavelDeclaracao() | <RETURN> [OpcoesRetorno()] ";" | If_Else() | Print() | While() | Expressao() ";"}
+void ExpressaoLiteral():{}{ <INTEGER_LITERAL> | <FLOATING_POINT_LITERAL> | <CHARACTER_LITERAL> | <STRING_LITERAL>}
+void Expressao():{}{ [<NEGACAO>]((<IDENTIFICADOR> [ChamadaDeMetodo() | <INCREMENTO> | <DECREMENTO> ] | ExpressaoLiteral()) [Atribuicao() | ComparacaoLogica() | ComparacaoRelacional() | ExpressaoNumerica()] | "(" Expressao() ")") }
+void ChamadaDeMetodo():{}{"(" [ListaDeArgumentos()] ")"}
+void ListaDeArgumentos():{}{ Expressao() ("," Expressao())*}
+void Atribuicao():{} {"=" Expressao()}
+void ComparacaoLogica():{} { ("&&" | "||") Expressao()}
+void ComparacaoRelacional():{}{ (">" | "<" | ">=" | "<=" | "==" | "!=") Expressao()}
+void ExpressaoNumerica():{}{ ("+" | "+=" | "-" | "-=" | "*" | "*=" | "/" | "/=" | "%" | "%=") Expressao() }
+void If_Else():{}{ <IF> "(" Expressao() ")" BlocoDeDeclaracoes() [ <ELSE> BlocoDeDeclaracoes() ]}
+void Print():{}{ <PRINT> "(" Expressao() ")" ";"}
+void While():{}{ <WHILE> "(" Expressao() ")" BlocoDeDeclaracoes()}
+void OpcoesInicializacao():{} {(Expressao() | <NULL> | <TRUE> | <FALSE>)}
+void OpcoesRetorno():{} {OpcoesInicializacao()}
+void Modificador():{}{ "private" | "protected" | "public"}
+void TipoDeDados():{}{ "int" | "float" | "String" | "char" | "boolean" | "void"}

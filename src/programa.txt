@@ -1,0 +1,70 @@
+package br.edu.uepb.compiladores;
+    
+//import java.awt.image.*; // Importação não utilizada
+import java.util.Scanner;
+
+/**
+ *	@author Ivan Simplício
+ */
+public class MeuCompilador {
+	
+	int varInt;
+	private float varFloat;
+	protected static boolean varBoolean = false;
+	public static final String CONSTANTE = "Texto constante";
+	
+	public MeuCompilador(int valorInt, float valorFloat){
+		varInt = valorInt;
+		varFloat = valorFloat;
+	}
+	
+	private int fibonacci(int valor){
+		if(valor <= 1){
+			return 1;
+		}else{
+			return fibonacci(valor-1) + fibonacci(valor-2);
+		}
+	}
+
+	public static final int somaValores (int a, int b) {
+    	return (a+b);
+	}
+	
+	//Método inútil, por isso foi comentado
+	/*public String retornaNull(){
+		return null;
+	}*/
+	
+	public static void imprimeFrase(){
+		System.out.println("Olá Mundo!");
+	}
+
+	public static void main (String[] args) {
+		
+		boolean varBooleanLocal = true;
+		
+		imprimeFrase();
+		
+		int resultado = soma(5,4);
+		System.out.println("O resultado da soma é: "+resultado);
+		
+		System.out.println("Fibonacci para n=8:  "+fibonacci(8));
+		
+		if (varBooleanLocal) {
+			if (resultado < 10) {
+				System.out.println("O resultado da soma é menor que 10!");
+			}else{
+				if(resultado++ == 10){
+					System.out.println("Agora o resultado é igual a 10!");
+					varBooleanLocal = !varBooleanLocal;
+				}
+			}
+		} else {
+			while (resultado < 20) {
+				if(varBooleanLocal && (resultado != 20)){
+					result += 1;
+				}	
+			}
+		}
+	}
+}
